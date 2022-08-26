@@ -14,18 +14,6 @@ type GeneratedCell = {
   wall: boolean;
 };
 
-type CellCoord = {
-  x: number;
-  y: number;
-};
-
-type addWallsProps = {
-  maze: GeneratedCell[][];
-  walls: GeneratedCell[];
-  x: number;
-  y: number;
-};
-
 const Maze = ({ width, height }: MazeProps) => {
   const [size, setSize] = useState({
     width: width * 1.75 + "rem",
@@ -78,13 +66,10 @@ const Maze = ({ width, height }: MazeProps) => {
       }
     }
 
-    setCells(maze);
-    setWallStack(walls);
+    generateMaze(maze, walls);
   };
 
-  const generateMaze = () => {
-    let walls = [...wallStack];
-    let maze = [...cells];
+  const generateMaze = (maze: GeneratedCell[][], walls: GeneratedCell[]) => {
     while (walls.length > 0) {
       let someWall = walls.splice(
         Math.floor(Math.random() * wallStack.length),
@@ -103,12 +88,12 @@ const Maze = ({ width, height }: MazeProps) => {
               (!maze.at(y)?.at(x - i)?.visited &&
                 maze.at(y)?.at(x + i)?.visited)
             ) {
-              if (calcSurroundingCells({ x, y }) < 2) {
+              if (calcSurroundingCells(x, y) < 2) {
                 maze.at(y)!.at(x)!.visited = true;
                 maze.at(y)!.at(x)!.wall = false;
 
                 // Add surrounding cells as walls, if they should be added
-                addWalls({ maze, walls, x, y });
+                addWalls(maze, walls, x, y);
               }
             }
           }
@@ -120,7 +105,7 @@ const Maze = ({ width, height }: MazeProps) => {
     setCells(maze);
   };
 
-  const calcSurroundingCells = ({ x, y }: CellCoord) => {
+  const calcSurroundingCells = (x: number, y: number) => {
     let sumOfSurrounding: number = 0;
 
     for (let i = -1; i < 2; i += 2) {
@@ -134,7 +119,12 @@ const Maze = ({ width, height }: MazeProps) => {
     return sumOfSurrounding;
   };
 
-  const addWalls = ({ maze, walls, x, y }: addWallsProps) => {
+  const addWalls = (
+    maze: GeneratedCell[][],
+    walls: GeneratedCell[],
+    x: number,
+    y: number
+  ) => {
     for (let i = -1; i < 2; i += 2) {
       if (
         y > 0 &&
@@ -168,8 +158,8 @@ const Maze = ({ width, height }: MazeProps) => {
         <button onClick={generateCells} className="border p-1">
           Generate new maze
         </button>
-        <button onClick={generateMaze} className="border p-1">
-          Next step
+        <button onClick={() => {}} className="border p-1">
+          Solve maze
         </button>
         <button className="border p-1">Next snapshot</button>
       </div>
