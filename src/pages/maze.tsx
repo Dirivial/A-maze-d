@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import Cell from "./cell";
 import type { CellProps } from "./cell";
+import { clear } from "console";
 
 type MazeProps = {
   width: number;
@@ -34,6 +35,10 @@ const Maze = ({ width, height }: MazeProps) => {
   });
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
+
+  useEffect(() => {
+    console.log(cells);
+  }, [cells]);
 
   const generateCells = () => {
     let maze: GeneratedCell[][] = [];
@@ -83,11 +88,10 @@ const Maze = ({ width, height }: MazeProps) => {
     setWallStack(walls);
   };
 
-  const nextStep = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const generateMaze = () => {
     let walls = [...wallStack];
     let maze = [...cells];
-    let noChange = true;
-    while (noChange && walls.length > 0) {
+    while (walls.length > 0) {
       let someWall = walls.splice(
         Math.floor(Math.random() * wallStack.length),
         1
@@ -98,57 +102,20 @@ const Maze = ({ width, height }: MazeProps) => {
         let y = someWall.y;
 
         if (y > 0 && y < height - 1 && x > 0 && x < width - 1) {
-          if (
-            !maze.at(y - 1)?.at(x)?.visited &&
-            maze.at(y + 1)?.at(x)?.visited
-          ) {
-            if (calcSurroundingCells({ x, y }) < 2) {
-              maze.at(y)!.at(x)!.visited = true;
-              maze.at(y)!.at(x)!.wall = false;
+          for (let i = -1; i < 2; i += 2) {
+            if (
+              (!maze.at(y - i)?.at(x)?.visited &&
+                maze.at(y + i)?.at(x)?.visited) ||
+              (!maze.at(y)?.at(x - i)?.visited &&
+                maze.at(y)?.at(x + i)?.visited)
+            ) {
+              if (calcSurroundingCells({ x, y }) < 2) {
+                maze.at(y)!.at(x)!.visited = true;
+                maze.at(y)!.at(x)!.wall = false;
 
-              // Add surrounding cells as walls, if they should be added
-              addWalls({ maze, walls, x, y });
-              noChange = false;
-            }
-          }
-          if (
-            !maze.at(y + 1)?.at(x)?.visited &&
-            maze.at(y - 1)?.at(x)?.visited
-          ) {
-            if (calcSurroundingCells({ x, y }) < 2) {
-              maze.at(y)!.at(x)!.visited = true;
-              maze.at(y)!.at(x)!.wall = false;
-
-              // Add surrounding cells as walls, if they should be added
-              addWalls({ maze, walls, x, y });
-              noChange = false;
-            }
-          }
-
-          if (
-            !maze.at(y)?.at(x - 1)?.visited &&
-            maze.at(y)?.at(x + 1)?.visited
-          ) {
-            if (calcSurroundingCells({ x, y }) < 2) {
-              maze.at(y)!.at(x)!.visited = true;
-              maze.at(y)!.at(x)!.wall = false;
-
-              // Add surrounding cells as walls, if they should be added
-              addWalls({ maze, walls, x, y });
-              noChange = false;
-            }
-          }
-          if (
-            !maze.at(y)?.at(x + 1)?.visited &&
-            maze.at(y)?.at(x - 1)?.visited
-          ) {
-            if (calcSurroundingCells({ x, y }) < 2) {
-              maze.at(y)!.at(x)!.visited = true;
-              maze.at(y)!.at(x)!.wall = false;
-
-              // Add surrounding cells as walls, if they should be added
-              addWalls({ maze, walls, x, y });
-              noChange = false;
+                // Add surrounding cells as walls, if they should be added
+                addWalls({ maze, walls, x, y });
+              }
             }
           }
         }
@@ -202,11 +169,19 @@ const Maze = ({ width, height }: MazeProps) => {
   }, [width, height]);
 
   return (
-    <div className="rounded border flex flex-col bg-orange-300 p-2">
-      <button onClick={generateCells}>Generate new maze</button>
-      <button onClick={nextStep}>Next step</button>
+    <div className="rounded border justify-center items-center flex flex-col bg-orange-300 p-2">
+      <div className="flex flex-wrap p-3 gap-2">
+        <button onClick={generateCells} className="border p-1">
+          Generate new maze
+        </button>
+        <button onClick={generateMaze} className="border p-1">
+          Next step
+        </button>
+        <button className="border p-1">Next snapshot</button>
+      </div>
+
       <div style={{ width: size.width, height: size.height }} className="">
-        {cells.flat(1).map((cell, index) => {
+        {cells?.flat().map((cell, index) => {
           return (
             <Cell
               key={index}
