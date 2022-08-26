@@ -33,7 +33,7 @@ const Maze = ({ width, height }: MazeProps) => {
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
 
-  const generateCells = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const generateCells = () => {
     let maze: GeneratedCell[][] = [];
 
     // Fill maze
@@ -173,6 +173,10 @@ const Maze = ({ width, height }: MazeProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    generateCells();
+  }, [width, height]);
 
   return (
     <div className="rounded border flex flex-col">
