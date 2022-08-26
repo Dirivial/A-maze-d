@@ -20,7 +20,7 @@ const Cell = ({ x, y, visited, wall }: CellProps) => {
 
   return (
     <button
-      //onClick={clickHandler}
+      onClick={clickHandler}
       className={
         "rounded w-7 h-7 m-0 inline-block box-border" +
         (visited ? " bg-orange-500" : " bg-gray-400")
