@@ -37,10 +37,10 @@ const Maze = ({ width, height }: MazeProps) => {
     let maze: GeneratedCell[][] = [];
 
     // Fill maze
-    for (let i = 0; i < width; i++) {
+    for (let i = 0; i < height; i++) {
       maze[i] = [];
-      for (let j = 0; j < height; j++) {
-        if (i > 0 && i < width - 1 && j > 0 && j < height - 1) {
+      for (let j = 0; j < width; j++) {
+        if (i > 0 && i < height - 1 && j > 0 && j < width - 1) {
           (maze[i] as GeneratedCell[]).push({
             x: j,
             y: i,
@@ -179,7 +179,7 @@ const Maze = ({ width, height }: MazeProps) => {
   }, [width, height]);
 
   return (
-    <div className="rounded border flex flex-col">
+    <div className="rounded border flex flex-col bg-orange-300">
       <button onClick={generateCells}>Generate new maze</button>
       <button onClick={nextStep}>Next step</button>
       <div
