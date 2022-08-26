@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 
@@ -10,6 +11,8 @@ type TechnologyCardProps = {
 };
 
 const Home: NextPage = () => {
+  const [mazeWidth, setMazeWidth] = useState(10);
+  const [mazeHeight, setMazeHeigth] = useState(10);
   return (
     <>
       <Head>
@@ -19,7 +22,23 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="container mx-auto flex flex-col items-center justify-center min-h-screen p-4">
-        <Maze width={10} height={10} />
+        <input
+          type="number"
+          id="maze-width"
+          value={10}
+          min="5"
+          max="20"
+          onChange={(e) => setMazeWidth(e.target.valueAsNumber)}
+        />
+        <input
+          type="number"
+          id="maze-height"
+          value={10}
+          min="5"
+          max="20"
+          onChange={(e) => setMazeHeigth(e.target.valueAsNumber)}
+        />
+        <Maze width={mazeWidth} height={mazeHeight} />
       </main>
     </>
   );
