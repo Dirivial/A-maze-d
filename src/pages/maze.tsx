@@ -28,8 +28,10 @@ type addWallsProps = {
 };
 
 const Maze = ({ width, height }: MazeProps) => {
-  const componentWidth = width * 1.75 + "rem";
-  const componentHeight = height * 1.75 + "rem";
+  const [size, setSize] = useState({
+    width: width * 1.75 + "rem",
+    height: height * 1.75 + "rem",
+  });
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
 
@@ -84,55 +86,75 @@ const Maze = ({ width, height }: MazeProps) => {
   const nextStep = (event: React.MouseEvent<HTMLButtonElement>) => {
     let walls = [...wallStack];
     let maze = [...cells];
-    let someWall = walls.splice(
-      Math.floor(Math.random() * wallStack.length),
-      1
-    )[0];
+    let noChange = true;
+    while (noChange && walls.length > 0) {
+      let someWall = walls.splice(
+        Math.floor(Math.random() * wallStack.length),
+        1
+      )[0];
 
-    if (someWall) {
-      let x = someWall.x;
-      let y = someWall.y;
+      if (someWall) {
+        let x = someWall.x;
+        let y = someWall.y;
 
-      if (y > 0 && y < height - 1 && x > 0 && x < width - 1) {
-        if (!maze.at(y - 1)?.at(x)?.visited && maze.at(y + 1)?.at(x)?.visited) {
-          if (calcSurroundingCells({ x, y }) < 2) {
-            maze.at(y)!.at(x)!.visited = true;
-            maze.at(y)!.at(x)!.wall = false;
+        if (y > 0 && y < height - 1 && x > 0 && x < width - 1) {
+          if (
+            !maze.at(y - 1)?.at(x)?.visited &&
+            maze.at(y + 1)?.at(x)?.visited
+          ) {
+            if (calcSurroundingCells({ x, y }) < 2) {
+              maze.at(y)!.at(x)!.visited = true;
+              maze.at(y)!.at(x)!.wall = false;
 
-            // Add surrounding cells as walls, if they should be added
-            addWalls({ maze, walls, x, y });
+              // Add surrounding cells as walls, if they should be added
+              addWalls({ maze, walls, x, y });
+              noChange = false;
+            }
           }
-        }
-        if (!maze.at(y + 1)?.at(x)?.visited && maze.at(y - 1)?.at(x)?.visited) {
-          if (calcSurroundingCells({ x, y }) < 2) {
-            maze.at(y)!.at(x)!.visited = true;
-            maze.at(y)!.at(x)!.wall = false;
+          if (
+            !maze.at(y + 1)?.at(x)?.visited &&
+            maze.at(y - 1)?.at(x)?.visited
+          ) {
+            if (calcSurroundingCells({ x, y }) < 2) {
+              maze.at(y)!.at(x)!.visited = true;
+              maze.at(y)!.at(x)!.wall = false;
 
-            // Add surrounding cells as walls, if they should be added
-            addWalls({ maze, walls, x, y });
+              // Add surrounding cells as walls, if they should be added
+              addWalls({ maze, walls, x, y });
+              noChange = false;
+            }
           }
-        }
 
-        if (!maze.at(y)?.at(x - 1)?.visited && maze.at(y)?.at(x + 1)?.visited) {
-          if (calcSurroundingCells({ x, y }) < 2) {
-            maze.at(y)!.at(x)!.visited = true;
-            maze.at(y)!.at(x)!.wall = false;
+          if (
+            !maze.at(y)?.at(x - 1)?.visited &&
+            maze.at(y)?.at(x + 1)?.visited
+          ) {
+            if (calcSurroundingCells({ x, y }) < 2) {
+              maze.at(y)!.at(x)!.visited = true;
+              maze.at(y)!.at(x)!.wall = false;
 
-            // Add surrounding cells as walls, if they should be added
-            addWalls({ maze, walls, x, y });
+              // Add surrounding cells as walls, if they should be added
+              addWalls({ maze, walls, x, y });
+              noChange = false;
+            }
           }
-        }
-        if (!maze.at(y)?.at(x + 1)?.visited && maze.at(y)?.at(x - 1)?.visited) {
-          if (calcSurroundingCells({ x, y }) < 2) {
-            maze.at(y)!.at(x)!.visited = true;
-            maze.at(y)!.at(x)!.wall = false;
+          if (
+            !maze.at(y)?.at(x + 1)?.visited &&
+            maze.at(y)?.at(x - 1)?.visited
+          ) {
+            if (calcSurroundingCells({ x, y }) < 2) {
+              maze.at(y)!.at(x)!.visited = true;
+              maze.at(y)!.at(x)!.wall = false;
 
-            // Add surrounding cells as walls, if they should be added
-            addWalls({ maze, walls, x, y });
+              // Add surrounding cells as walls, if they should be added
+              addWalls({ maze, walls, x, y });
+              noChange = false;
+            }
           }
         }
       }
     }
+
     setWallStack(walls);
     setCells(maze);
   };
@@ -176,16 +198,14 @@ const Maze = ({ width, height }: MazeProps) => {
 
   useEffect(() => {
     generateCells();
+    setSize({ width: width * 1.75 + "rem", height: height * 1.75 + "rem" });
   }, [width, height]);
 
   return (
     <div className="rounded border flex flex-col bg-orange-300">
       <button onClick={generateCells}>Generate new maze</button>
       <button onClick={nextStep}>Next step</button>
-      <div
-        style={{ width: componentWidth, height: componentHeight }}
-        className=""
-      >
+      <div style={{ width: size.width, height: size.height }} className="">
         {cells.flat(1).map((cell, index) => {
           return (
             <Cell
