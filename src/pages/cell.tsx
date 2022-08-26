@@ -3,11 +3,12 @@ import { useState } from "react";
 type CellProps = {
   x: number;
   y: number;
-  isSelected: boolean;
+  visited: boolean;
+  wall: boolean;
 };
 
-const Cell = ({ x, y, isSelected }: CellProps) => {
-  const [selected, setSelected] = useState(isSelected);
+const Cell = ({ x, y, visited, wall }: CellProps) => {
+  const [selected, setSelected] = useState(visited);
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
@@ -18,9 +19,12 @@ const Cell = ({ x, y, isSelected }: CellProps) => {
   return (
     <button
       onClick={clickHandler}
-      className={"rounded border w-7 h-7 m-0" + (selected ? " bg-red-500" : "")}
+      className={
+        "rounded border w-7 h-7 m-0" +
+        (wall ? " bg-gray-400" : visited ? " bg-orange-500" : " bg-white")
+      }
     >
-      {" "}
+      {wall ? "w" : visited ? "c" : "u"}
     </button>
   );
 };
