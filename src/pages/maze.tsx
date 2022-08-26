@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 
 import Cell from "./cell";
-import type { CellProps } from "./cell";
-import { clear } from "console";
 
 type MazeProps = {
   width: number;
@@ -35,10 +33,6 @@ const Maze = ({ width, height }: MazeProps) => {
   });
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
-
-  useEffect(() => {
-    console.log(cells);
-  }, [cells]);
 
   const generateCells = () => {
     let maze: GeneratedCell[][] = [];
