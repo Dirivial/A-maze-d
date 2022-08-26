@@ -9,22 +9,25 @@ type CellProps = {
 
 const Cell = ({ x, y, visited, wall }: CellProps) => {
   const [selected, setSelected] = useState(visited);
+
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const button: HTMLButtonElement = event.currentTarget;
+    console.log("Cell @ ", x, y);
     setSelected((prev) => !prev);
   };
 
   return (
     <button
-      onClick={clickHandler}
+      //onClick={clickHandler}
       className={
-        "rounded border w-7 h-7 m-0" +
-        (wall ? " bg-gray-400" : visited ? " bg-orange-500" : " bg-white")
+        "rounded w-7 h-7 m-0 inline-block box-border" +
+        (visited ? " bg-orange-500" : " bg-gray-400")
       }
+      style={{ minWidth: "1.75rem" }}
     >
-      {wall ? "w" : visited ? "c" : "u"}
+      {"‎"}
     </button>
   );
 };
