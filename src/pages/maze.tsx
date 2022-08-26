@@ -66,10 +66,13 @@ const Maze = ({ width, height }: MazeProps) => {
       }
     }
 
-    generateMaze(maze, walls);
+    setCells(maze);
+    setWallStack(walls);
   };
 
-  const generateMaze = (maze: GeneratedCell[][], walls: GeneratedCell[]) => {
+  const generateMaze = () => {
+    let walls = [...wallStack];
+    let maze = [...cells];
     while (walls.length > 0) {
       let someWall = walls.splice(
         Math.floor(Math.random() * wallStack.length),
@@ -88,7 +91,7 @@ const Maze = ({ width, height }: MazeProps) => {
               (!maze.at(y)?.at(x - i)?.visited &&
                 maze.at(y)?.at(x + i)?.visited)
             ) {
-              if (calcSurroundingCells(x, y) < 2) {
+              if (calcSurroundingCells(x, y, maze) < 2) {
                 maze.at(y)!.at(x)!.visited = true;
                 maze.at(y)!.at(x)!.wall = false;
 
@@ -105,14 +108,18 @@ const Maze = ({ width, height }: MazeProps) => {
     setCells(maze);
   };
 
-  const calcSurroundingCells = (x: number, y: number) => {
+  const calcSurroundingCells = (
+    x: number,
+    y: number,
+    maze: GeneratedCell[][]
+  ) => {
     let sumOfSurrounding: number = 0;
 
     for (let i = -1; i < 2; i += 2) {
-      if (cells.at(y + i)?.at(x)?.visited) {
+      if (maze.at(y + i)?.at(x)?.visited) {
         sumOfSurrounding++;
       }
-      if (cells.at(y)?.at(x + i)?.visited) {
+      if (maze.at(y)?.at(x + i)?.visited) {
         sumOfSurrounding++;
       }
     }
@@ -158,10 +165,9 @@ const Maze = ({ width, height }: MazeProps) => {
         <button onClick={generateCells} className="border p-1">
           Generate new maze
         </button>
-        <button onClick={() => {}} className="border p-1">
+        <button onClick={() => generateMaze()} className="border p-1">
           Solve maze
         </button>
-        <button className="border p-1">Next snapshot</button>
       </div>
 
       <div style={{ width: size.width, height: size.height }} className="">
