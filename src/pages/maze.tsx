@@ -202,7 +202,7 @@ const Maze = ({ width, height }: MazeProps) => {
   }, [width, height]);
 
   return (
-    <div className="rounded border flex flex-col bg-orange-300">
+    <div className="rounded border flex flex-col bg-orange-300 p-2">
       <button onClick={generateCells}>Generate new maze</button>
       <button onClick={nextStep}>Next step</button>
       <div style={{ width: size.width, height: size.height }} className="">
