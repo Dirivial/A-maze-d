@@ -25,7 +25,7 @@ const Home: NextPage = () => {
         <input
           type="number"
           id="maze-width"
-          value={10}
+          defaultValue={10}
           min="5"
           max="20"
           onChange={(e) => setMazeWidth(e.target.valueAsNumber)}
@@ -33,7 +33,7 @@ const Home: NextPage = () => {
         <input
           type="number"
           id="maze-height"
-          value={10}
+          defaultValue={10}
           min="5"
           max="20"
           onChange={(e) => setMazeHeigth(e.target.valueAsNumber)}
