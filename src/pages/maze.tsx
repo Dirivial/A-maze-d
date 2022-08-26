@@ -1,52 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-type CellProps = {
-  x: number;
-  y: number;
-  isSelected: boolean;
-};
-
-const Cell = ({ x, y, isSelected }: CellProps) => {
-  const [selected, setSelected] = useState(isSelected);
-  const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-
-    const button: HTMLButtonElement = event.currentTarget;
-    setSelected((prev) => !prev);
-  };
-
-  return (
-    <button
-      onClick={clickHandler}
-      className={"rounded border w-7 h-7 m-0" + (selected ? " bg-red-500" : "")}
-    >
-      {" "}
-    </button>
-  );
-};
+import Cell from "./cell";
+import type { CellProps } from "./cell";
 
 type MazeProps = {
   width: number;
   height: number;
 };
 
+type GeneratedCell = {
+  x: number;
+  y: number;
+  visited: boolean;
+  wall: boolean;
+};
+
+type MazeStack = {
+  x: number;
+  y: number;
+};
+
 const Maze = ({ width, height }: MazeProps) => {
-  const [cells, setCells] = useState([{ x: 0, y: 0, isSelected: false }]);
+  const [cells, setCells] = useState<CellProps[]>([]);
 
   const generateCells = (event: React.MouseEvent<HTMLButtonElement>) => {
-    let newCells: CellProps[] = [];
+    let maze: GeneratedCell[][] = [];
 
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
-        newCells.push({
-          x: j,
-          y: i,
-          isSelected: Math.floor(Math.random() * 2) === 0,
+    // Fill maze
+    for (let i = 0; i < width; i++) {
+      maze[i] = [];
+      for (let j = 0; j < height; j++) {
+        (maze[i] as GeneratedCell[]).push({
+          x: i,
+          y: j,
+          visited: false,
+          wall: true,
         });
       }
     }
 
-    setCells(newCells);
+    // Choose a starting point -- as of now on the first row but should be random
+    let randomX = 2; //Math.floor(Math.random() * width);
+    let randomY = 1;
+    let wallStack: MazeStack[] = [];
+    if (maze[randomX]![randomY]) {
+      (maze[randomX]![randomY] as GeneratedCell).visited = true;
+      (maze[randomX]![randomY] as GeneratedCell).wall = false;
+      for (let i = -1; i < 2; i += 2) {
+        if (maze[i + randomX]?.[randomY]) {
+          wallStack.push(maze[i + randomX]![randomY]!);
+        }
+        if (maze[randomX]?.[i + randomY]) {
+          wallStack.push(maze[randomX]![i + randomY]!);
+        }
+      }
+    }
+
+    wallStack.map((value) => console.log(value));
+
+    // Main loop for generating maze
+    while (wallStack.length > 0) {
+      let current = wallStack.pop() as GeneratedCell;
+    }
   };
 
   return (
