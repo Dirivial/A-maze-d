@@ -33,6 +33,7 @@ const Maze = ({ width, height }: MazeProps) => {
   );
 
   const generateCells = () => {
+    if (!height || !width) return;
     let maze: GeneratedCell[][] = [];
 
     // Fill maze
@@ -176,23 +177,23 @@ const Maze = ({ width, height }: MazeProps) => {
   }, [width, height]);
 
   return (
-    <div className="rounded border justify-center items-center flex flex-col bg-orange-300 p-2">
-      <div className="flex flex-wrap p-3 gap-2">
-        <button onClick={generateCells} className="border p-1">
+    <div className="rounded justify-center items-center flex flex-col bg-slate-500 p-2 border border-slate-600">
+      <div className="flex flex-wrap p-3 gap-2 items-center">
+        <button onClick={generateCells} className={"p-1 bg-blue-400 rounded"}>
           Generate new maze
         </button>
-        <button onClick={generateMaze} className="border p-1">
+        <button
+          onClick={() => setAutomaticGeneration((prev) => !prev)}
+          className={
+            "p-1 rounded" +
+            (automaticGeneration ? " bg-blue-600" : " bg-blue-400")
+          }
+        >
           Solve maze
         </button>
+        <label className="">Delay</label>
         <input
-          type="checkbox"
-          value="unchecked"
-          onChange={(e) => {
-            setAutomaticGeneration((prev) => !prev);
-          }}
-        />
-        <label>Auto</label>
-        <input
+          className="bg-blue-400 rounded pl-1 w-14"
           type="number"
           id="delay"
           defaultValue={500}
@@ -202,12 +203,17 @@ const Maze = ({ width, height }: MazeProps) => {
         />
       </div>
 
-      <div style={{ width: size.width, height: size.height }} className="">
-        {cells?.flat().map((cell, index) => {
-          return (
-            <Cell key={index} x={cell.x} y={cell.y} visited={cell.visited} />
-          );
-        })}
+      <div className="border rounded border-orange-300">
+        <div
+          style={{ width: size.width, height: size.height }}
+          className="bg-gray-600 rounded"
+        >
+          {cells?.flat().map((cell, index) => {
+            return (
+              <Cell key={index} x={cell.x} y={cell.y} visited={cell.visited} />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

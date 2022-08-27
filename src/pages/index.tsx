@@ -20,24 +20,33 @@ const Home: NextPage = () => {
         <meta name="description" content="Generates and solves mazes" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1 className="p-16 flex flex-col items-center text-7xl">A-maze-d</h1>
+      <h1 className="p-16 flex flex-col items-center text-7xl text-blue-500">
+        A-maze-d
+      </h1>
       <main className="container mx-auto flex flex-col items-center min-h-screen p-4">
-        <input
-          type="number"
-          id="maze-width"
-          defaultValue={10}
-          min="5"
-          max="20"
-          onChange={(e) => setMazeWidth(e.target.valueAsNumber)}
-        />
-        <input
-          type="number"
-          id="maze-height"
-          defaultValue={10}
-          min="5"
-          max="20"
-          onChange={(e) => setMazeHeigth(e.target.valueAsNumber)}
-        />
+        <div className="flex gap-4 bg-slate-600 rounded-t border-t border-r border-l p-2">
+          <label>Width:</label>
+          <input
+            className="bg-blue-400 rounded pl-1 w-10"
+            type="number"
+            id="maze-width"
+            defaultValue={10}
+            min="5"
+            max="30"
+            onChange={(e) => setMazeWidth(e.target.valueAsNumber)}
+          />
+          <label>Height:</label>
+          <input
+            className="bg-blue-400 rounded pl-1 w-10"
+            type="number"
+            id="maze-height"
+            defaultValue={10}
+            min="5"
+            max="30"
+            onChange={(e) => setMazeHeigth(e.target.valueAsNumber)}
+          />
+        </div>
+
         <Maze width={mazeWidth} height={mazeHeight} />
       </main>
     </>

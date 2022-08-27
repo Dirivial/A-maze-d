@@ -18,8 +18,8 @@ const Cell = ({ x, y, visited }: CellProps) => {
     <button
       onClick={clickHandler}
       className={
-        "rounded w-7 h-7 m-0 inline-block box-border" +
-        (visited ? " bg-orange-500" : " bg-gray-400")
+        "rounded-lg w-7 h-7 m-0 inline-block box-border" +
+        (visited ? " bg-purple-400" : " bg-gray-600")
       }
       style={{ minWidth: "1.75rem" }}
     >
