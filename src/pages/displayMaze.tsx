@@ -4,14 +4,18 @@ type CellProps = {
   x: number;
   y: number;
   visited: boolean;
+  wall: boolean;
 };
 
-const Cell = ({ x, y, visited }: CellProps) => {
+const MazeDisplayer = ({ x, y, visited, wall }: CellProps) => {
+  const [selected, setSelected] = useState(visited);
+
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     const button: HTMLButtonElement = event.currentTarget;
     console.log("Cell @ ", x, y);
+    setSelected((prev) => !prev);
   };
 
   return (
@@ -28,5 +32,5 @@ const Cell = ({ x, y, visited }: CellProps) => {
   );
 };
 
-export default Cell;
+export default MazeDisplayer;
 export type { CellProps };

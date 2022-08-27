@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+import useInterval from "../hooks/useInterval";
 import Cell from "./cell";
 
 type MazeProps = {
@@ -21,6 +22,15 @@ const Maze = ({ width, height }: MazeProps) => {
   });
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
+  const [automaticGeneration, setAutomaticGeneration] = useState(false);
+  const [delay, setDelay] = useState(1000);
+
+  useInterval(
+    () => {
+      generateMaze();
+    },
+    automaticGeneration ? delay : null
+  );
 
   const generateCells = () => {
     let maze: GeneratedCell[][] = [];
@@ -73,7 +83,8 @@ const Maze = ({ width, height }: MazeProps) => {
   const generateMaze = () => {
     let walls = [...wallStack];
     let maze = [...cells];
-    while (walls.length > 0) {
+    let noChange = true;
+    while (walls.length > 0 && noChange) {
       let someWall = walls.splice(
         Math.floor(Math.random() * wallStack.length),
         1
@@ -97,11 +108,16 @@ const Maze = ({ width, height }: MazeProps) => {
 
                 // Add surrounding cells as walls, if they should be added
                 addWalls(maze, walls, x, y);
+                noChange = false;
               }
             }
           }
         }
       }
+    }
+
+    if (wallStack.length === 0) {
+      setAutomaticGeneration(false);
     }
 
     setWallStack(walls);
@@ -165,26 +181,40 @@ const Maze = ({ width, height }: MazeProps) => {
         <button onClick={generateCells} className="border p-1">
           Generate new maze
         </button>
-        <button onClick={() => generateMaze()} className="border p-1">
+        <button onClick={generateMaze} className="border p-1">
           Solve maze
         </button>
+        <input
+          type="checkbox"
+          value="unchecked"
+          onChange={(e) => {
+            setAutomaticGeneration((prev) => !prev);
+          }}
+        />
+        <label>Auto</label>
+        <input
+          type="number"
+          id="delay"
+          defaultValue={500}
+          min="0"
+          max="1000"
+          onChange={(e) => setDelay(e.target.valueAsNumber)}
+        />
       </div>
 
       <div style={{ width: size.width, height: size.height }} className="">
         {cells?.flat().map((cell, index) => {
           return (
-            <Cell
-              key={index}
-              x={cell.x}
-              y={cell.y}
-              visited={cell.visited}
-              wall={cell.wall}
-            />
+            <Cell key={index} x={cell.x} y={cell.y} visited={cell.visited} />
           );
         })}
       </div>
     </div>
   );
 };
+
+interface Thing {
+  (): void;
+}
 
 export default Maze;
