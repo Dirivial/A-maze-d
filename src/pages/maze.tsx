@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import useInterval from "../hooks/useInterval";
-import Cell from "./cell";
+import { Cell } from "./cell";
 
 type MazeProps = {
   width: number;

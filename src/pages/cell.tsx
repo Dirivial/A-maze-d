@@ -8,7 +8,13 @@ type CellProps = {
   updateEntrance: () => void;
 };
 
-const Cell = ({ x, y, visited, updateExit, updateEntrance }: CellProps) => {
+export const Cell = ({
+  x,
+  y,
+  visited,
+  updateExit,
+  updateEntrance,
+}: CellProps) => {
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
@@ -34,6 +40,3 @@ const Cell = ({ x, y, visited, updateExit, updateEntrance }: CellProps) => {
     </button>
   );
 };
-
-export default Cell;
-export type { CellProps };
