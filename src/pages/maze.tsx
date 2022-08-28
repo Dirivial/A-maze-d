@@ -22,14 +22,14 @@ const Maze = ({ width, height }: MazeProps) => {
   });
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
-  const [automaticGeneration, setAutomaticGeneration] = useState(false);
+  const [generating, setGenerating] = useState(0);
   const [delay, setDelay] = useState(1000);
 
   useInterval(
     () => {
       generateMaze();
     },
-    automaticGeneration ? delay : null
+    generating === 2 ? delay : null
   );
 
   const generateCells = () => {
@@ -118,7 +118,7 @@ const Maze = ({ width, height }: MazeProps) => {
     }
 
     if (wallStack.length === 0) {
-      setAutomaticGeneration(false);
+      setGenerating(0);
     }
 
     setWallStack(walls);
@@ -176,20 +176,29 @@ const Maze = ({ width, height }: MazeProps) => {
     setSize({ width: width * 1.75 + "rem", height: height * 1.75 + "rem" });
   }, [width, height]);
 
+  const handleClickGeneration = () => {
+    if (generating === 2) {
+      setGenerating(1);
+    } else {
+      if (generating === 1) {
+        setGenerating(2);
+      } else {
+        generateCells();
+        setGenerating(2);
+      }
+    }
+  };
+
   return (
-    <div className="rounded justify-center items-center flex flex-col bg-slate-500 p-2 border border-slate-600">
+    <div className="rounded justify-center items-center flex flex-col bg-slate-500 p-2 border border-slate-600 ring-2">
       <div className="flex flex-wrap p-3 gap-2 items-center">
-        <button onClick={generateCells} className={"p-1 bg-blue-400 rounded"}>
-          Generate new maze
-        </button>
         <button
-          onClick={() => setAutomaticGeneration((prev) => !prev)}
+          onClick={handleClickGeneration}
           className={
-            "p-1 rounded" +
-            (automaticGeneration ? " bg-blue-600" : " bg-blue-400")
+            "p-1 rounded" + (generating === 2 ? " bg-blue-600" : " bg-blue-400")
           }
         >
-          Solve maze
+          Generate new maze
         </button>
         <label className="">Delay</label>
         <input
@@ -201,9 +210,13 @@ const Maze = ({ width, height }: MazeProps) => {
           max="1000"
           onChange={(e) => setDelay(e.target.valueAsNumber)}
         />
+        <div className="p-2" />
+        <button onClick={() => {}} className="p-1 rounded bg-blue-400">
+          Solve maze
+        </button>
       </div>
 
-      <div className="border rounded border-orange-300">
+      <div className="border rounded border-blue-300">
         <div
           style={{ width: size.width, height: size.height }}
           className="bg-gray-600 rounded"
@@ -218,9 +231,5 @@ const Maze = ({ width, height }: MazeProps) => {
     </div>
   );
 };
-
-interface Thing {
-  (): void;
-}
 
 export default Maze;
