@@ -143,7 +143,7 @@ const Maze = ({ width, height }: MazeProps) => {
         sumOfSurrounding++;
       }
     }
-    return sumOfSurrounding;
+    return sumOfSurrounding as number;
   };
 
   const addWalls = (
