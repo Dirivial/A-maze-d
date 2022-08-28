@@ -25,6 +25,9 @@ const Maze = ({ width, height }: MazeProps) => {
   const [generating, setGenerating] = useState(0);
   const [delay, setDelay] = useState(1000);
 
+  const [entrance, setEntrance] = useState({});
+  const [exit, setExit] = useState({});
+
   useInterval(
     () => {
       generateMaze();
@@ -223,7 +226,14 @@ const Maze = ({ width, height }: MazeProps) => {
         >
           {cells?.flat().map((cell, index) => {
             return (
-              <Cell key={index} x={cell.x} y={cell.y} visited={cell.visited} />
+              <Cell
+                key={index}
+                x={cell.x}
+                y={cell.y}
+                visited={cell.visited}
+                updateExit={() => setExit(cell)}
+                updateEntrance={() => setEntrance(cell)}
+              />
             );
           })}
         </div>

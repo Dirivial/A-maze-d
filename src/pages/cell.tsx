@@ -4,13 +4,20 @@ type CellProps = {
   x: number;
   y: number;
   visited: boolean;
+  updateExit: () => void;
+  updateEntrance: () => void;
 };
 
-const Cell = ({ x, y, visited }: CellProps) => {
+const Cell = ({ x, y, visited, updateExit, updateEntrance }: CellProps) => {
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    const button: HTMLButtonElement = event.currentTarget;
+    if (event.shiftKey) {
+      console.log("Setting goal to cell @ ", x, y);
+    } else {
+      console.log("Setting start to cell @ ", x, y);
+    }
+
     console.log("Cell @ ", x, y);
   };
 
