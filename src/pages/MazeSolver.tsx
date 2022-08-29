@@ -68,15 +68,15 @@ export const MazeSolver = ({
     // Look at the positions up,down,left,right and store them if they are possible paths.
     let current = searchHead.current;
     let last = searchHead.last;
-    let highPriority = [];
-    let lowPriority = [];
+    let highPriority = []; // Cells with no marks
+    let lowPriority = []; // Cells with one mark
+
     for (let i = -1; i < 2; i += 2) {
       if (current.y + i !== last.y && maze[current.y + i]) {
         if (
           maze[current.y + i]![current.x]!.visited &&
           maze[current.y + i]![current.x]!.marks < 2
         ) {
-          // Add square to high priority if no marks
           if (maze[current.y + i]![current.x]!.marks === 0) {
             highPriority.push({ y: current.y + i, x: current.x });
           } else {
@@ -98,7 +98,7 @@ export const MazeSolver = ({
       }
     }
 
-    // Moving/marking time
+    // --- Moving/marking time ---
     if (highPriority.length === 1) {
       // Continue here
       if (lowPriority.length === 0) {
