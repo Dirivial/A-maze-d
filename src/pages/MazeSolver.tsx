@@ -66,8 +66,7 @@ export const MazeSolver = ({
 
   return (
     <div>
-      <div>
-        {" "}
+      <div className="flex justify-center">
         <button
           onClick={() => {
             console.log(generatedMaze());
@@ -76,7 +75,8 @@ export const MazeSolver = ({
         >
           Solve maze
         </button>
-      </div>{" "}
+      </div>
+      <div className="p-1" />
       <div className="border rounded border-blue-300">
         <div
           style={{ width: sizeW, height: sizeH }}

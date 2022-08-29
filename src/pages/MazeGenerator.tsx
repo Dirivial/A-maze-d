@@ -199,8 +199,7 @@ export const MazeGenerator = ({
 
   return (
     <div>
-      <div>
-        {" "}
+      <div className="flex justify-center items-center gap-x-1">
         <button
           onClick={handleClickGeneration}
           className={
@@ -220,6 +219,7 @@ export const MazeGenerator = ({
           onChange={(e) => setDelay(e.target.valueAsNumber)}
         />
       </div>
+      <div className="p-1" />
       <div className="border rounded border-blue-300">
         <div
           style={{ width: sizeW, height: sizeH }}
