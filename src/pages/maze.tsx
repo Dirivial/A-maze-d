@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { number } from "zod";
 
 import useInterval from "../hooks/useInterval";
 import { Cell } from "./cell";
