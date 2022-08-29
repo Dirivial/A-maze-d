@@ -28,6 +28,11 @@ const Maze = ({ width, height }: MazeProps) => {
   const [entrance, setEntrance] = useState({});
   const [exit, setExit] = useState({});
 
+  useEffect(() => {
+    console.log(entrance);
+    console.log(exit);
+  }, [entrance, exit]);
+
   useInterval(
     () => {
       generateMaze();
@@ -111,7 +116,7 @@ const Maze = ({ width, height }: MazeProps) => {
                 maze.at(y)!.at(x)!.wall = false;
 
                 // Add surrounding cells as walls, if they should be added
-                addWalls(maze, walls, x, y);
+                addWalls(maze, walls, x, y, height, width);
                 noChange = false;
               }
             }
@@ -126,52 +131,6 @@ const Maze = ({ width, height }: MazeProps) => {
 
     setWallStack(walls);
     setCells(maze);
-  };
-
-  const calcSurroundingCells = (
-    x: number,
-    y: number,
-    maze: GeneratedCell[][]
-  ) => {
-    let sumOfSurrounding: number = 0;
-
-    for (let i = -1; i < 2; i += 2) {
-      if (maze.at(y + i)?.at(x)?.visited) {
-        sumOfSurrounding++;
-      }
-      if (maze.at(y)?.at(x + i)?.visited) {
-        sumOfSurrounding++;
-      }
-    }
-    return sumOfSurrounding as number;
-  };
-
-  const addWalls = (
-    maze: GeneratedCell[][],
-    walls: GeneratedCell[],
-    x: number,
-    y: number
-  ) => {
-    for (let i = -1; i < 2; i += 2) {
-      if (
-        y > 0 &&
-        y < height - 1 &&
-        !maze.at(y + i)!.at(x)!.visited &&
-        !maze.at(y + i)!.at(x)!.wall
-      ) {
-        maze.at(y + i)!.at(x)!.wall = true;
-        walls.push(maze.at(y + i)!.at(x)!);
-      }
-      if (
-        x > 0 &&
-        x < width - 1 &&
-        !maze.at(y)!.at(x + i)!.visited &&
-        !maze.at(y)!.at(x + i)!.wall
-      ) {
-        maze.at(y)!.at(x + i)!.wall = true;
-        walls.push(maze.at(y)!.at(x + i)!);
-      }
-    }
   };
 
   useEffect(() => {
@@ -243,6 +202,54 @@ const Maze = ({ width, height }: MazeProps) => {
       </div>
     </div>
   );
+};
+
+const addWalls = (
+  maze: GeneratedCell[][],
+  walls: GeneratedCell[],
+  x: number,
+  y: number,
+  height: number,
+  width: number
+) => {
+  for (let i = -1; i < 2; i += 2) {
+    if (
+      y > 0 &&
+      y < height - 1 &&
+      !maze.at(y + i)!.at(x)!.visited &&
+      !maze.at(y + i)!.at(x)!.wall
+    ) {
+      maze.at(y + i)!.at(x)!.wall = true;
+      walls.push(maze.at(y + i)!.at(x)!);
+    }
+    if (
+      x > 0 &&
+      x < width - 1 &&
+      !maze.at(y)!.at(x + i)!.visited &&
+      !maze.at(y)!.at(x + i)!.wall
+    ) {
+      maze.at(y)!.at(x + i)!.wall = true;
+      walls.push(maze.at(y)!.at(x + i)!);
+    }
+  }
+};
+
+const calcSurroundingCells = (
+  x: number,
+  y: number,
+  maze: GeneratedCell[][]
+) => {
+  let sumOfSurrounding: number = 0;
+
+  for (let i = -1; i < 2; i += 2) {
+    if (maze.at(y + i)?.at(x)?.visited) {
+      sumOfSurrounding++;
+    }
+    if (maze.at(y)?.at(x + i)?.visited) {
+      sumOfSurrounding++;
+    }
+  }
+  return sumOfSurrounding as number;
 };
 
 export default Maze;
