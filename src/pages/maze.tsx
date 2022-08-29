@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { number } from "zod";
 
 import useInterval from "../hooks/useInterval";
 import { Cell } from "./cell";
@@ -15,6 +16,12 @@ type GeneratedCell = {
   wall: boolean;
 };
 
+type SpecialCell = {
+  x: number;
+  y: number;
+  index: number;
+};
+
 const Maze = ({ width, height }: MazeProps) => {
   const [size, setSize] = useState({
     width: width * 1.75 + "rem",
@@ -25,13 +32,8 @@ const Maze = ({ width, height }: MazeProps) => {
   const [generating, setGenerating] = useState(0);
   const [delay, setDelay] = useState(1000);
 
-  const [entrance, setEntrance] = useState({});
-  const [exit, setExit] = useState({});
-
-  useEffect(() => {
-    console.log(entrance);
-    console.log(exit);
-  }, [entrance, exit]);
+  const [entrance, setEntrance] = useState<SpecialCell>();
+  const [exit, setExit] = useState<SpecialCell>();
 
   useInterval(
     () => {
@@ -135,6 +137,8 @@ const Maze = ({ width, height }: MazeProps) => {
 
   useEffect(() => {
     generateCells();
+    setExit(undefined);
+    setEntrance(undefined);
     setSize({ width: width * 1.75 + "rem", height: height * 1.75 + "rem" });
   }, [width, height]);
 
@@ -147,6 +151,38 @@ const Maze = ({ width, height }: MazeProps) => {
       } else {
         generateCells();
         setGenerating(2);
+      }
+    }
+  };
+
+  const updateEntrance = (x: number, y: number, index: number) => {
+    if (cells === undefined || wallStack.length !== 0) return;
+    for (let i = -1; i < 2; i += 2) {
+      if (cells[y + i]) {
+        if (cells[y + i]![x]!.visited) {
+          setEntrance({ x, y, index });
+        }
+      }
+      if (cells[y]![x + i]) {
+        if (cells[y]![x + i]!.visited) {
+          setEntrance({ x, y, index });
+        }
+      }
+    }
+  };
+
+  const updateExit = (x: number, y: number, index: number) => {
+    if (cells === undefined || wallStack.length !== 0) return;
+    for (let i = -1; i < 2; i += 2) {
+      if (cells[y + i]) {
+        if (cells[y + i]![x]!.visited) {
+          setExit({ x, y, index });
+        }
+      }
+      if (cells[y]![x + i]) {
+        if (cells[y]![x + i]!.visited) {
+          setExit({ x, y, index });
+        }
       }
     }
   };
@@ -187,14 +223,12 @@ const Maze = ({ width, height }: MazeProps) => {
             return (
               <Cell
                 key={index}
-                x={cell.x}
-                y={cell.y}
                 path={cell.visited}
                 solution={false}
-                isEntrance={entrance === index}
-                isExit={exit === index}
-                updateExit={() => setExit(index)}
-                updateEntrance={() => setEntrance(index)}
+                isEntrance={entrance?.index === index}
+                isExit={exit?.index === index}
+                updateExit={() => updateExit(cell.x, cell.y, index)}
+                updateEntrance={() => updateEntrance(cell.x, cell.y, index)}
               />
             );
           })}

@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFlag, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+import { faFlag, faCircleDot } from "@fortawesome/free-regular-svg-icons";
+import { useMemo, useState } from "react";
 
 export type CellProps = {
-  x: number;
-  y: number;
   path: boolean;
   solution: boolean;
   isExit: boolean;
@@ -13,8 +12,6 @@ export type CellProps = {
 };
 
 export const Cell = ({
-  x,
-  y,
   path,
   solution,
   isExit,
@@ -22,32 +19,46 @@ export const Cell = ({
   updateExit,
   updateEntrance,
 }: CellProps) => {
+  const [color, setColor] = useState(
+    solution ? " bg-red-500" : path ? " bg-purple-400" : " bg-gray-600"
+  );
+
+  useMemo(() => {
+    setColor(
+      isEntrance
+        ? " bg-red-700"
+        : isExit
+        ? " bg-red-700"
+        : solution
+        ? " bg-red-500"
+        : path
+        ? " bg-purple-400"
+        : " bg-gray-600"
+    );
+  }, [path, solution, isExit, isEntrance]);
+
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (isExit || isEntrance) return;
 
     if (event.shiftKey) {
-      console.log("Setting goal to cell @ ", x, y);
       updateExit();
     } else {
-      console.log("Setting start to cell @ ", x, y);
       updateEntrance();
     }
-  };
-
-  const calcColor = () => {
-    return (
-      solution ? " bg-red-500" : path ? " bg-purple-400" : " bg-gray-600"
-    ) as string;
   };
 
   return (
     <button
       onClick={clickHandler}
-      className={"rounded-lg w-7 h-7 m-0 inline-block box-border " + calcColor}
+      className={"rounded-lg w-7 h-7 m-0 inline-block box-border " + color}
       style={{ minWidth: "1.75rem", maxWidth: "1.75rem" }}
     >
-      {isExit ? <FontAwesomeIcon icon={faFlag} /> : "‎"}
+      {isExit || isEntrance ? (
+        <FontAwesomeIcon icon={isEntrance ? faCircleDot : faFlag} />
+      ) : (
+        "‎"
+      )}
     </button>
   );
 };
