@@ -230,9 +230,12 @@ const Maze = ({ width, height }: MazeProps) => {
                 key={index}
                 x={cell.x}
                 y={cell.y}
-                visited={cell.visited}
-                updateExit={() => setExit(cell)}
-                updateEntrance={() => setEntrance(cell)}
+                path={cell.visited}
+                solution={false}
+                isEntrance={entrance === index}
+                isExit={exit === index}
+                updateExit={() => setExit(index)}
+                updateEntrance={() => setEntrance(index)}
               />
             );
           })}
