@@ -1,3 +1,4 @@
+import { exitCode } from "process";
 import { useMemo, useState } from "react";
 import { Cell } from "./cell";
 import { GeneratedCell } from "./MazeGenerator";
@@ -87,10 +88,10 @@ export const MazeSolver = ({
                 key={index}
                 path={cell.visited}
                 solution={false}
-                isEntrance={false}
-                isExit={false}
-                updateExit={() => null}
-                updateEntrance={() => null}
+                isEntrance={index === entrance?.index}
+                isExit={index === exit?.index}
+                updateExit={() => updateExit(cell.x, cell.y, index)}
+                updateEntrance={() => updateEntrance(cell.x, cell.y, index)}
               />
             );
           })}
