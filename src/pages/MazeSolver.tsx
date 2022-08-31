@@ -1,10 +1,11 @@
 import { faColumns } from "@fortawesome/free-solid-svg-icons";
 import PreviousMap from "postcss/lib/previous-map";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { number } from "zod";
 import useInterval from "../hooks/useInterval";
-import { Cell } from "./cell";
+import { SolutionCell } from "./SolutionCell";
 import { GeneratedCell } from "./MazeGenerator";
+import { lstat } from "fs";
 
 export type MazeSolverProps = {
   width: number;
@@ -42,9 +43,19 @@ export const MazeSolver = ({
   const [done, setDone] = useState(false);
 
   const [searchHead, setSearchHead] = useState({
-    current: { x: 0, y: 0 },
+    current: { x: -1, y: -1 },
     last: { x: 0, y: 0 },
   });
+
+  useEffect(() => {
+    if (
+      exit &&
+      searchHead.current.x === exit.x &&
+      searchHead.current.y === exit.y
+    ) {
+      setDone(true);
+    }
+  }, [searchHead]);
 
   useMemo(() => {
     let newMaze: SolutionCell[][] = [];
@@ -52,7 +63,11 @@ export const MazeSolver = ({
     oldMaze.forEach((column, index) => {
       newMaze.push([]);
       column.forEach((item) =>
-        newMaze[index]?.push({ ...item, solution: false, marks: 0 })
+        newMaze[index]?.push({
+          ...item,
+          solution: false,
+          marks: item.wall ? 2 : 0,
+        })
       );
     });
     setMaze(newMaze);
@@ -61,15 +76,14 @@ export const MazeSolver = ({
   // Wait until algorithm is implemented
   //useInterval(() => {}, done ? null : 0);
 
-  const nextMove = () => {};
-
   const findPossibleMoves = () => {
     let nextMaze = [...maze];
+
     // Look at the positions up,down,left,right and store them if they are possible paths.
     let current = searchHead.current;
     let last = searchHead.last;
-    let highPriority = []; // Cells with no marks
-    let lowPriority = []; // Cells with one mark
+    let highPriority: Coordinate[] = []; // Cells with no marks
+    let lowPriority: Coordinate[] = []; // Cells with one mark
 
     for (let i = -1; i < 2; i += 2) {
       if (current.y + i !== last.y && maze[current.y + i]) {
@@ -98,23 +112,70 @@ export const MazeSolver = ({
       }
     }
 
-    // --- Moving/marking time ---
-    if (highPriority.length === 1) {
-      // Continue here
-      if (lowPriority.length === 0) {
-        // Move without worries
+    if (
+      lowPriority.length + highPriority.length > 1 &&
+      nextMaze[current.y]![current.x]!.marks === 1
+    ) {
+      nextMaze[current.y]![current.x]!.marks--;
+    }
+
+    nextMaze[last.y]![last.x]!.marks += 1;
+
+    // --- Moving/marking ---
+    if (lowPriority.length === 0) {
+      if (highPriority.length > 0) {
+        // Choose a random high-priority path.
+        let randomIndex = Math.floor(Math.random() * highPriority.length);
+        setSearchHead((prev) => {
+          return {
+            current: {
+              x: highPriority[randomIndex]!.x,
+              y: highPriority[randomIndex]!.y,
+            },
+            last: { x: prev.current.x, y: prev.current.y },
+          };
+        });
       } else {
-        // Junction, mark last and next
-        nextMaze[last.y]![last.x]!.marks += 1;
-        nextMaze[highPriority[0]!.y]![highPriority[0]!.x]!.marks += 1;
+        // Go back. No paths found.
+        nextMaze[current.y]![current.x]!.marks += 1;
+        setSearchHead((prev) => {
+          return {
+            current: { x: prev.last.x, y: prev.last.y },
+            last: { x: prev.current.x, y: prev.current.y },
+          };
+        });
       }
     } else {
-      if (highPriority.length > 2) {
-        // Multiple good paths to choose from
+      if (highPriority.length > 0) {
+        // Choose random high-priority
+        nextMaze[last.y]![last.x]!.marks += 1;
+        let randomIndex = Math.floor(Math.random() * highPriority.length);
+        setSearchHead((prev) => {
+          return {
+            current: {
+              x: highPriority[randomIndex]!.x,
+              y: highPriority[randomIndex]!.y,
+            },
+            last: { x: prev.current.x, y: prev.current.y },
+          };
+        });
       } else {
-        // Nothing good. Turn back.
+        // Choose random low-priority
+        let randomIndex = Math.floor(Math.random() * lowPriority.length);
+
+        setSearchHead((prev) => {
+          return {
+            current: {
+              x: lowPriority[randomIndex]!.x,
+              y: lowPriority[randomIndex]!.y,
+            },
+            last: { x: prev.current.x, y: prev.current.y },
+          };
+        });
       }
     }
+    setMaze([...nextMaze]);
+    return;
   };
 
   const updateEntrance = (x: number, y: number, index: number) => {
@@ -170,10 +231,13 @@ export const MazeSolver = ({
         >
           {maze?.flat().map((cell, index) => {
             return (
-              <Cell
+              <SolutionCell
                 key={index}
                 path={cell.visited}
-                solution={cell.solution}
+                current={
+                  searchHead.current.y * width + searchHead.current.x === index
+                }
+                marks={cell.marks}
                 isEntrance={index === entrance?.index}
                 isExit={index === exit?.index}
                 updateExit={() => updateExit(cell.x, cell.y, index)}
