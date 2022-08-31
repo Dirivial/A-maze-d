@@ -27,7 +27,6 @@ export const MazeGenerator = ({
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
   const [generating, setGenerating] = useState(0);
-  const [delay, setDelay] = useState(50);
 
   const pickStarting = (maze: GeneratedCell[][]) => {
     let randomX = Math.floor(Math.random() * (width - 2)) + 1;
@@ -181,7 +180,7 @@ export const MazeGenerator = ({
     () => {
       generateMaze();
     },
-    generating === 2 ? delay : null
+    generating === 2 ? 0 : null
   );
 
   const handleClickGeneration = () => {
@@ -208,35 +207,15 @@ export const MazeGenerator = ({
         >
           Generate new maze
         </button>
-        <label className="">Delay</label>
-        <input
-          className="bg-blue-400 rounded pl-1 w-14"
-          type="number"
-          id="delay"
-          defaultValue={delay}
-          min="0"
-          max="1000"
-          onChange={(e) => setDelay(e.target.valueAsNumber)}
-        />
       </div>
       <div className="p-1" />
       <div className="border rounded border-blue-300">
         <div
-          style={{ width: sizeW, height: sizeH }}
-          className="bg-gray-600 rounded"
+          style={{ width: sizeW, maxWidth: sizeW, height: sizeH }}
+          className="bg-gray-600 rounded flex flex-wrap"
         >
           {cells?.flat().map((cell, index) => {
-            return (
-              <Cell
-                key={index}
-                path={cell.visited}
-                solution={false}
-                isEntrance={false}
-                isExit={false}
-                updateExit={() => null}
-                updateEntrance={() => null}
-              />
-            );
+            return <Cell key={index} path={cell.visited} />;
           })}
         </div>
       </div>
