@@ -40,7 +40,7 @@ export const MazeSolver = ({
   //const [solution, setSolution] = useState<SolutionCell[]>([]);
   const [entrance, setEntrance] = useState<SpecialCell>();
   const [exit, setExit] = useState<SpecialCell>();
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(true);
 
   const [searchHead, setSearchHead] = useState({
     current: { x: -1, y: -1 },
@@ -53,6 +53,9 @@ export const MazeSolver = ({
       searchHead.current.x === exit.x &&
       searchHead.current.y === exit.y
     ) {
+      if (maze[searchHead.last.y]![searchHead.last.x]!.marks === 0) {
+        maze[searchHead.last.y]![searchHead.last.x]!.marks++;
+      }
       setDone(true);
     }
   }, [searchHead]);
@@ -74,9 +77,15 @@ export const MazeSolver = ({
   }, [generatedMaze]);
 
   // Wait until algorithm is implemented
-  //useInterval(() => {}, done ? null : 0);
+  useInterval(
+    () => {
+      findPossibleMoves();
+    },
+    done ? null : 50
+  );
 
   const findPossibleMoves = () => {
+    if (searchHead.current.x === -1 || searchHead.current.y === -1) return;
     let nextMaze = [...maze];
 
     // Look at the positions up,down,left,right and store them if they are possible paths.
@@ -219,15 +228,18 @@ export const MazeSolver = ({
   return (
     <div>
       <div className="flex justify-center">
-        <button onClick={findPossibleMoves} className="p-1 rounded bg-blue-400">
+        <button
+          onClick={() => setDone((prev) => !prev)}
+          className="p-1 rounded bg-blue-400"
+        >
           Solve maze
         </button>
       </div>
       <div className="p-1" />
       <div className="border rounded border-blue-300">
         <div
-          style={{ width: sizeW, height: sizeH }}
-          className="bg-gray-600 rounded"
+          style={{ maxWidth: sizeW }}
+          className="bg-gray-600 rounded flex flex-wrap"
         >
           {maze?.flat().map((cell, index) => {
             return (
