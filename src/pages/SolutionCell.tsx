@@ -59,7 +59,7 @@ export const SolutionCell = ({
   return (
     <button
       onClick={clickHandler}
-      className={"rounded-lg w-7 h-7 m-0 inline-block box-border " + color}
+      className={"rounded-lg w-7 h-7 m-0 " + color}
       style={{
         minWidth: "1.75rem",
         maxWidth: "1.75rem",
@@ -70,7 +70,7 @@ export const SolutionCell = ({
       <div className="flex justify-center align-middle">
         {isExit || isEntrance || current ? (
           <FontAwesomeIcon
-            style={{ width: "0.8rem", height: "0.8rem" }}
+            style={{ maxWidth: "1.7rem", maxHeight: "1.7rem" }}
             icon={isEntrance ? faCircleDot : isExit ? faFlag : faDotCircle}
           />
         ) : (
