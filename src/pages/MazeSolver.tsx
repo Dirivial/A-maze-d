@@ -224,7 +224,10 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
       <div className="p-3" />
       <div className="">
         <div
-          style={{ maxWidth: width * 1.75 + "rem" }}
+          style={{
+            maxWidth: width * 1.75 + "rem",
+            minWidth: width * 1.75 + "rem",
+          }}
           className="bg-gray-600 rounded flex flex-wrap"
         >
           {maze?.flat().map((cell, index) => {

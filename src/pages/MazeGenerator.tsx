@@ -240,7 +240,10 @@ export const MazeGenerator = ({
       <div className="p-3" />
       <div className="flex justify-center">
         <div
-          style={{ maxWidth: width * 1.75 + "rem" }}
+          style={{
+            maxWidth: width * 1.75 + "rem",
+            minWidth: width * 1.75 + "rem",
+          }}
           className="bg-gray-600 rounded flex flex-wrap"
         >
           {cells?.flat().map((cell, index) => {
