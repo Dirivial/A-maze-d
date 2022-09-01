@@ -30,19 +30,22 @@ export const SolutionCell = ({
   );
 
   useMemo(() => {
-    setColor(
-      isEntrance
-        ? " bg-red-700"
-        : isExit
-        ? " bg-red-700"
-        : marks < 1
-        ? " bg-red-500"
-        : marks < 2
-        ? " bg-red-400"
-        : path
-        ? " bg-purple-600"
-        : " bg-gray-600"
-    );
+    setColor((prev) => {
+      if (isEntrance) {
+        return " bg-red-700";
+      }
+      if (isExit) {
+        return " bg-red-700";
+      }
+      if (path) {
+        return marks === 0
+          ? " bg-purple-400"
+          : marks === 1
+          ? " bg-purple-600"
+          : " bg-purple-900";
+      }
+      return " bg-gray-600";
+    });
   }, [path, marks, current, isExit, isEntrance]);
 
   const clickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {

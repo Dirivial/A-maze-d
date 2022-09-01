@@ -10,25 +10,37 @@ export type GeneratedCell = {
 };
 
 export type MazeGeneratorProps = {
-  width: number;
-  height: number;
-  sizeW: string;
-  sizeH: string;
+  setMazeDimensions: (width: number, height: number) => void;
   setMaze: (maze: GeneratedCell[][]) => void;
 };
 
 export const MazeGenerator = ({
-  width,
-  height,
-  sizeW,
-  sizeH,
+  setMazeDimensions,
   setMaze,
 }: MazeGeneratorProps) => {
+  const [width, setWidth] = useState(15);
+  const [height, setHeight] = useState(15);
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
   const [generating, setGenerating] = useState(0);
 
-  const pickStarting = (maze: GeneratedCell[][]) => {
+  useMemo(() => {
+    if (width > 5 && height > 5 && height < 31 && width < 31) {
+      const newMaze = generateCells();
+      setCells(newMaze);
+    } else {
+      setCells([]);
+    }
+  }, [width, height]);
+
+  useInterval(
+    () => {
+      generateMaze();
+    },
+    generating === 2 ? 0 : null
+  );
+
+  function pickStarting(maze: GeneratedCell[][]) {
     let randomX = Math.floor(Math.random() * (width - 2)) + 1;
     let randomY = Math.floor(Math.random() * (height - 2)) + 1;
     let walls: GeneratedCell[] = [];
@@ -49,10 +61,10 @@ export const MazeGenerator = ({
 
     setCells(maze);
     setWallStack(walls);
-  };
+  }
 
-  const generateCells = () => {
-    if (!height || !width) return;
+  function generateCells(): GeneratedCell[][] {
+    if (!height || !width) return [];
     let maze: GeneratedCell[][] = [];
 
     // Fill maze
@@ -77,9 +89,9 @@ export const MazeGenerator = ({
       }
     }
     return maze as GeneratedCell[][];
-  };
+  }
 
-  const generateMaze = () => {
+  function generateMaze() {
     let walls = [...wallStack];
     let maze = [...cells];
     let noChange = true;
@@ -117,21 +129,22 @@ export const MazeGenerator = ({
 
     if (wallStack.length === 0) {
       setGenerating(0);
-      setMaze(maze);
+      setMazeDimensions(width, height);
+      setMaze([...maze]);
     }
 
     setWallStack(walls);
     setCells(maze);
-  };
+  }
 
-  const addWalls = (
+  function addWalls(
     maze: GeneratedCell[][],
     walls: GeneratedCell[],
     x: number,
     y: number,
     height: number,
     width: number
-  ) => {
+  ) {
     for (let i = -1; i < 2; i += 2) {
       if (
         y > 0 &&
@@ -152,13 +165,9 @@ export const MazeGenerator = ({
         walls.push(maze.at(y)!.at(x + i)!);
       }
     }
-  };
+  }
 
-  const calcSurroundingCells = (
-    x: number,
-    y: number,
-    maze: GeneratedCell[][]
-  ) => {
+  function calcSurroundingCells(x: number, y: number, maze: GeneratedCell[][]) {
     let sumOfSurrounding: number = 0;
 
     for (let i = -1; i < 2; i += 2) {
@@ -170,18 +179,7 @@ export const MazeGenerator = ({
       }
     }
     return sumOfSurrounding as number;
-  };
-
-  useMemo(() => {
-    generateCells();
-  }, [width, height]);
-
-  useInterval(
-    () => {
-      generateMaze();
-    },
-    generating === 2 ? 0 : null
-  );
+  }
 
   const handleClickGeneration = () => {
     if (generating === 2) {
@@ -198,20 +196,45 @@ export const MazeGenerator = ({
 
   return (
     <div>
-      <div className="flex justify-center items-center gap-x-1">
+      <div className="flex justify-center items-center gap-x-1 text-gray-100">
+        <div className="flex gap-4 bg-transparent p-2">
+          <label>Width:</label>
+          <input
+            className="bg-slate-600 rounded pl-1 w-10"
+            type="number"
+            id="maze-width"
+            defaultValue={10}
+            min="5"
+            max="30"
+            onChange={(e) => setWidth(e.target.valueAsNumber)}
+          />
+          <label>Height:</label>
+          <input
+            className="bg-slate-600 rounded pl-1 w-10"
+            type="number"
+            id="maze-height"
+            defaultValue={10}
+            min="5"
+            max="30"
+            onChange={(e) => setHeight(e.target.valueAsNumber)}
+          />
+        </div>
         <button
           onClick={handleClickGeneration}
           className={
-            "p-1 rounded" + (generating === 2 ? " bg-blue-600" : " bg-blue-400")
+            "p-1 rounded transition-colors" +
+            (generating === 2
+              ? " bg-slate-600"
+              : " bg-transparent hover:bg-slate-600")
           }
         >
-          Generate new maze
+          Generate
         </button>
       </div>
-      <div className="p-1" />
-      <div className="border rounded border-blue-300">
+      <div className="p-3" />
+      <div className="flex justify-center">
         <div
-          style={{ width: sizeW, maxWidth: sizeW, height: sizeH }}
+          style={{ maxWidth: width * 1.75 + "rem" }}
           className="bg-gray-600 rounded flex flex-wrap"
         >
           {cells?.flat().map((cell, index) => {

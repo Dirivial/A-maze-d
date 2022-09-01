@@ -1,64 +1,52 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { number } from "zod";
 
 import { MazeGenerator, GeneratedCell } from "./MazeGenerator";
 import { MazeSolver } from "./MazeSolver";
 
-type MazeProps = {
-  width: number;
-  height: number;
-};
-
-const Maze = ({ width, height }: MazeProps) => {
-  console.log("Rendering maze");
-  const [size, setSize] = useState({
-    width: width * 1.75 + "rem",
-    height: height * 1.75 + "rem",
+function Maze() {
+  const [maze, setMaze] = useState<GeneratedCell[][]>([]);
+  const [mode, setMode] = useState<number>(0);
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
   });
 
-  let maze: GeneratedCell[][] = [];
-  //const [maze, setMaze] = useState<GeneratedCell[][]>([]);
-  const [mode, setMode] = useState<number>(0);
-
-  useEffect(() => {
-    setSize({ width: width * 1.75 + "rem", height: height * 1.75 + "rem" });
-  }, [width, height]);
-
   return (
-    <div className="rounded justify-center items-center flex flex-col bg-slate-500 p-2 border border-slate-600 ring-2">
+    <div className="justify-center items-center flex flex-col bg-transparent p-2">
       <div className="flex flex-wrap p-3 gap-2 items-center">
         <button
           onClick={() => setMode(0)}
-          className={"p-1 rounded" + (mode ? "  bg-blue-400" : "  bg-blue-600")}
+          className={
+            "p-1 rounded transition-colors text-gray-100" +
+            (mode ? "  bg-transparent hover:bg-slate-600" : "  bg-slate-600")
+          }
         >
-          Maze Generator
+          Generate
         </button>
         <div className="p2" />
         <button
           onClick={() => setMode(1)}
-          className={"p-1 rounded" + (mode ? "  bg-blue-600" : "  bg-blue-400")}
+          className={
+            "p-1 rounded transition-colors text-gray-100" +
+            (mode ? "  bg-slate-600" : "  bg-transparent hover:bg-slate-600")
+          }
         >
-          Maze Solver
+          Solve
         </button>
       </div>
       {mode === 0 ? (
         <MazeGenerator
-          width={width}
-          height={height}
-          sizeW={size.width}
-          sizeH={size.height}
-          setMaze={(generatedMaze: GeneratedCell[][]) => (maze = generatedMaze)}
+          setMazeDimensions={(width: number, height: number) =>
+            setDimensions({ width: width, height: height })
+          }
+          setMaze={(generatedMaze: GeneratedCell[][]) => setMaze(generatedMaze)}
         />
       ) : (
-        <MazeSolver
-          width={width}
-          height={height}
-          sizeW={size.width}
-          sizeH={size.height}
-          generatedMaze={() => maze}
-        />
+        <MazeSolver width={dimensions.width} generatedMaze={() => maze} />
       )}
     </div>
   );
-};
+}
 
 export default Maze;

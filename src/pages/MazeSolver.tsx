@@ -1,17 +1,10 @@
-import { faColumns } from "@fortawesome/free-solid-svg-icons";
-import PreviousMap from "postcss/lib/previous-map";
 import { useEffect, useMemo, useState } from "react";
-import { number } from "zod";
 import useInterval from "../hooks/useInterval";
 import { SolutionCell } from "./SolutionCell";
 import { GeneratedCell } from "./MazeGenerator";
-import { lstat } from "fs";
 
 export type MazeSolverProps = {
   width: number;
-  height: number;
-  sizeW: string;
-  sizeH: string;
   generatedMaze: () => GeneratedCell[][];
 };
 
@@ -29,15 +22,8 @@ type SpecialCell = Coordinate & {
   index: number;
 };
 
-export const MazeSolver = ({
-  width,
-  height,
-  sizeW,
-  sizeH,
-  generatedMaze,
-}: MazeSolverProps) => {
+export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
   const [maze, setMaze] = useState<SolutionCell[][]>([]);
-  //const [solution, setSolution] = useState<SolutionCell[]>([]);
   const [entrance, setEntrance] = useState<SpecialCell>();
   const [exit, setExit] = useState<SpecialCell>();
   const [done, setDone] = useState(true);
@@ -230,15 +216,15 @@ export const MazeSolver = ({
       <div className="flex justify-center">
         <button
           onClick={() => setDone((prev) => !prev)}
-          className="p-1 rounded bg-blue-400"
+          className="p-1 rounded bg-transparent transition-colors hover:bg-slate-600 text-gray-100"
         >
-          Solve maze
+          {done ? "Start" : "Pause"}
         </button>
       </div>
       <div className="p-1" />
-      <div className="border rounded border-blue-300">
+      <div className="">
         <div
-          style={{ maxWidth: sizeW }}
+          style={{ maxWidth: width * 1.75 + "rem" }}
           className="bg-gray-600 rounded flex flex-wrap"
         >
           {maze?.flat().map((cell, index) => {
