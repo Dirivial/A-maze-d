@@ -213,15 +213,15 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
 
   return (
     <div>
-      <div className="flex justify-center">
+      <div className="flex justify-center align-middle">
         <button
           onClick={() => setDone((prev) => !prev)}
-          className="p-1 rounded bg-transparent transition-colors hover:bg-slate-600 text-gray-100"
+          className="p-2 rounded bg-transparent transition-colors hover:bg-slate-600 text-gray-100"
         >
           {done ? "Start" : "Pause"}
         </button>
       </div>
-      <div className="p-1" />
+      <div className="p-3" />
       <div className="">
         <div
           style={{ maxWidth: width * 1.75 + "rem" }}
