@@ -62,7 +62,9 @@ export const SolutionCell = ({
   return (
     <button
       onClick={clickHandler}
-      className={"rounded-lg w-7 h-7 m-0 " + color}
+      className={
+        "rounded-lg w-7 h-7 m-0 transition-color duration-300 " + color
+      }
       style={{
         minWidth: "1.75rem",
         maxWidth: "1.75rem",
