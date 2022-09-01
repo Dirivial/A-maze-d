@@ -10,16 +10,22 @@ export type GeneratedCell = {
 };
 
 export type MazeGeneratorProps = {
+  oldDimensions: { width: number; height: number };
   setMazeDimensions: (width: number, height: number) => void;
   setMaze: (maze: GeneratedCell[][]) => void;
 };
 
 export const MazeGenerator = ({
+  oldDimensions,
   setMazeDimensions,
   setMaze,
 }: MazeGeneratorProps) => {
-  const [width, setWidth] = useState(15);
-  const [height, setHeight] = useState(15);
+  const [width, setWidth] = useState(
+    oldDimensions.width ? oldDimensions.width : 15
+  );
+  const [height, setHeight] = useState(
+    oldDimensions.height ? oldDimensions.height : 15
+  );
   const [cells, setCells] = useState<GeneratedCell[][]>([]);
   const [wallStack, setWallStack] = useState<GeneratedCell[]>([]);
   const [generating, setGenerating] = useState(0);
@@ -203,7 +209,7 @@ export const MazeGenerator = ({
             className="bg-slate-600 rounded pl-1 w-10"
             type="number"
             id="maze-width"
-            defaultValue={10}
+            defaultValue={oldDimensions.width ? oldDimensions.width : 15}
             min="5"
             max="30"
             onChange={(e) => setWidth(e.target.valueAsNumber)}
@@ -213,7 +219,7 @@ export const MazeGenerator = ({
             className="bg-slate-600 rounded pl-1 w-10"
             type="number"
             id="maze-height"
-            defaultValue={10}
+            defaultValue={oldDimensions.height ? oldDimensions.height : 15}
             min="5"
             max="30"
             onChange={(e) => setHeight(e.target.valueAsNumber)}

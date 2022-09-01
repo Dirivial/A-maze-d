@@ -14,21 +14,20 @@ function Maze() {
 
   return (
     <div className="justify-center items-center flex flex-col bg-transparent p-2">
-      <div className="flex flex-wrap p-3 gap-2 items-center">
+      <div className="flex flex-wrap p-3 gap-2 items-center text-2xl">
         <button
           onClick={() => setMode(0)}
           className={
-            "p-1 rounded transition-colors text-gray-100" +
+            "p-2 rounded transition-colors text-gray-100" +
             (mode ? "  bg-transparent hover:bg-slate-600" : "  bg-slate-600")
           }
         >
           Generate
         </button>
-        <div className="p2" />
         <button
           onClick={() => setMode(1)}
           className={
-            "p-1 rounded transition-colors text-gray-100" +
+            "p-2 rounded transition-colors text-gray-100" +
             (mode ? "  bg-slate-600" : "  bg-transparent hover:bg-slate-600")
           }
         >
@@ -37,6 +36,7 @@ function Maze() {
       </div>
       {mode === 0 ? (
         <MazeGenerator
+          oldDimensions={{ width: dimensions.width, height: dimensions.height }}
           setMazeDimensions={(width: number, height: number) =>
             setDimensions({ width: width, height: height })
           }
