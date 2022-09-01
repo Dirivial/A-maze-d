@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { number } from "zod";
 
-import { MazeGenerator, GeneratedCell } from "./MazeGenerator";
+import { MazeGenerator } from "./MazeGenerator";
 import { MazeSolver } from "./MazeSolver";
+import { GeneratedCell } from "./types";
 
 function Maze() {
   const [maze, setMaze] = useState<GeneratedCell[][]>([]);

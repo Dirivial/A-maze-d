@@ -1,13 +1,7 @@
 import { useMemo, useState } from "react";
 import useInterval from "../hooks/useInterval";
 import { Cell } from "./cell";
-
-export type GeneratedCell = {
-  x: number;
-  y: number;
-  visited: boolean;
-  wall: boolean;
-};
+import { GeneratedCell } from "./types";
 
 export type MazeGeneratorProps = {
   oldDimensions: { width: number; height: number };
