@@ -9,7 +9,10 @@ const Home: NextPage = () => {
       <Head>
         <title>A-maze-d</title>
         <meta name="description" content="Generates and solves mazes" />
-        <link rel="icon" href="/pfp.png" />
+        <link
+          rel="icon"
+          href="https://raw.githubusercontent.com/Dirivial/A-maze-d/main/public/pfp.png"
+        />
       </Head>
       <div className="p-4" />
       <main className="container mx-auto flex flex-col items-center min-h-screen p-4">
@@ -18,7 +21,7 @@ const Home: NextPage = () => {
         <a href="https://github.com/Dirivial/A-maze-d">
           <img
             className=" rounded-full hover:shadow-lg shadow-neutral-500 hover:bg-slate-800 hover:bg-opacity-40 transition-colors"
-            src="/Github-Mark-64px.png"
+            src="https://raw.githubusercontent.com/Dirivial/A-maze-d/main/public/GitHub-Mark-64px.png"
           />
         </a>
       </main>
