@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
 
 import { MazeGenerator } from "./MazeGenerator";
 import { MazeSolver } from "./MazeSolver";

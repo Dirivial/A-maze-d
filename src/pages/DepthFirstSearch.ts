@@ -17,7 +17,7 @@ export default function DepthFirstSearch({maze, searchHead}: DepthFirstSearchPro
     for (let i = -1; i < 2; i += 2) {
       // Cell above/below, avoiding last cell
       if (current.y + i !== last.y && maze[current.y + i]) {
-        let cell = maze[current.y + i]![current.x];
+        const cell = maze[current.y + i]![current.x];
         if (cell!.visited && cell!.marks < 2) {
           if (cell!.marks === 0) {
             highPriority.push({ y: current.y + i, x: current.x });
@@ -28,7 +28,7 @@ export default function DepthFirstSearch({maze, searchHead}: DepthFirstSearchPro
       }
       // Cell to the left/right, avoiding last cell
       if (current.x + i !== last.x && maze[current.y]![current.x + i]) {
-        let cell = maze[current.y]![current.x + i];
+        const cell = maze[current.y]![current.x + i];
         if (cell!.visited && cell!.marks < 2) {
           if (cell!.marks === 0) {
             highPriority.push({ y: current.y, x: current.x + i });
@@ -54,7 +54,7 @@ export default function DepthFirstSearch({maze, searchHead}: DepthFirstSearchPro
     if (lowPriority.length === 0) {
       if (highPriority.length > 0) {
         // Choose a random high-priority path.
-        let randomIndex = Math.floor(Math.random() * highPriority.length);
+        const randomIndex = Math.floor(Math.random() * highPriority.length);
         return {maze: nextMaze, searchHead: {current: highPriority[randomIndex]!, last: current}};
       }
 
@@ -66,11 +66,11 @@ export default function DepthFirstSearch({maze, searchHead}: DepthFirstSearchPro
     if (highPriority.length > 0) {
       // Choose random high-priority
       nextMaze[last.y]![last.x]!.marks += 1;
-      let randomIndex = Math.floor(Math.random() * highPriority.length);
+      const randomIndex = Math.floor(Math.random() * highPriority.length);
       return {maze: nextMaze, searchHead: {current: highPriority[randomIndex]!, last: current}};
     }
 
     // Choose random low-priority
-    let randomIndex = Math.floor(Math.random() * lowPriority.length);
+    const randomIndex = Math.floor(Math.random() * lowPriority.length);
     return {maze: nextMaze, searchHead: {current: lowPriority[randomIndex]!, last: current}};
 }

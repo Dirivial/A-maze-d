@@ -42,8 +42,8 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
 
   // Import maze when needed
   useMemo(() => {
-    let newMaze: SolutionCell[][] = [];
-    let oldMaze: GeneratedCell[][] = generatedMaze();
+    const newMaze: SolutionCell[][] = [];
+    const oldMaze: GeneratedCell[][] = generatedMaze();
     oldMaze.forEach((column, index) => {
       newMaze.push([]);
       column.forEach((item) =>

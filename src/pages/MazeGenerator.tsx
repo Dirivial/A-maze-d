@@ -41,9 +41,9 @@ export const MazeGenerator = ({
   );
 
   function pickStarting(maze: GeneratedCell[][]) {
-    let randomX = Math.floor(Math.random() * (width - 2)) + 1;
-    let randomY = Math.floor(Math.random() * (height - 2)) + 1;
-    let walls: GeneratedCell[] = [];
+    const randomX = Math.floor(Math.random() * (width - 2)) + 1;
+    const randomY = Math.floor(Math.random() * (height - 2)) + 1;
+    const walls: GeneratedCell[] = [];
     if (maze[randomY]![randomX]) {
       (maze[randomY]![randomX] as GeneratedCell).visited = true;
       (maze[randomY]![randomX] as GeneratedCell).wall = false;
@@ -65,7 +65,7 @@ export const MazeGenerator = ({
 
   function generateCells(): GeneratedCell[][] {
     if (!height || !width) return [];
-    let maze: GeneratedCell[][] = [];
+    const maze: GeneratedCell[][] = [];
 
     // Fill maze
     for (let i = 0; i < height; i++) {
@@ -92,18 +92,18 @@ export const MazeGenerator = ({
   }
 
   function generateMaze() {
-    let walls = [...wallStack];
-    let maze = [...cells];
+    const walls = [...wallStack];
+    const maze = [...cells];
     let noChange = true;
     while (walls.length > 0 && noChange) {
-      let someWall = walls.splice(
+      const someWall = walls.splice(
         Math.floor(Math.random() * wallStack.length),
         1
       )[0];
 
       if (someWall) {
-        let x = someWall.x;
-        let y = someWall.y;
+        const x = someWall.x;
+        const y = someWall.y;
 
         if (y > 0 && y < height - 1 && x > 0 && x < width - 1) {
           for (let i = -1; i < 2; i += 2) {
