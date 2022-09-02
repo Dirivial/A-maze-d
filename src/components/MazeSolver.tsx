@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import useInterval from "../hooks/useInterval";
-import DepthFirstSearch from "./DepthFirstSearch";
-import { SolutionCell as Cell } from "./SolutionCell";
-import { GeneratedCell, Coordinate, SolutionCell } from "./types";
+import DepthFirstSearch from "../lib/DepthFirstSearch";
+import { SolutionCell } from "./SolutionCell";
+import {
+  GeneratedCell,
+  Coordinate,
+  SolutionCell as SolutionCellProps,
+} from "../lib/types";
 
 export type MazeSolverProps = {
   width: number;
@@ -13,8 +17,8 @@ type SpecialCell = Coordinate & {
   index: number;
 };
 
-export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
-  const [maze, setMaze] = useState<SolutionCell[][]>([]);
+export default function MazeSolver({ width, generatedMaze }: MazeSolverProps) {
+  const [maze, setMaze] = useState<SolutionCellProps[][]>([]);
   const [entrance, setEntrance] = useState<SpecialCell>();
   const [exit, setExit] = useState<SpecialCell>();
   const [paused, setPaused] = useState(true);
@@ -42,7 +46,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
 
   // Import maze when needed
   useMemo(() => {
-    const newMaze: SolutionCell[][] = [];
+    const newMaze: SolutionCellProps[][] = [];
     const oldMaze: GeneratedCell[][] = generatedMaze();
     oldMaze.forEach((column, index) => {
       newMaze.push([]);
@@ -152,7 +156,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
         >
           {maze?.flat().map((cell, index) => {
             return (
-              <Cell
+              <SolutionCell
                 key={index}
                 path={cell.visited}
                 current={
@@ -175,4 +179,4 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
       ) : null}
     </div>
   );
-};
+}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import useInterval from "../hooks/useInterval";
 import { Cell } from "./cell";
-import { GeneratedCell } from "./types";
+import { GeneratedCell } from "../lib/types";
 
 export type MazeGeneratorProps = {
   oldDimensions: { width: number; height: number };
@@ -9,11 +9,11 @@ export type MazeGeneratorProps = {
   setMaze: (maze: GeneratedCell[][]) => void;
 };
 
-export const MazeGenerator = ({
+export default function MazeGenerator({
   oldDimensions,
   setMazeDimensions,
   setMaze,
-}: MazeGeneratorProps) => {
+}: MazeGeneratorProps) {
   const [width, setWidth] = useState(
     oldDimensions.width ? oldDimensions.width : 15
   );
@@ -247,4 +247,4 @@ export const MazeGenerator = ({
       </div>
     </div>
   );
-};
+}

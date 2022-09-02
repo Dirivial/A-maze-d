@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import Maze from "./maze";
+import Maze from "../components/Maze";
 
 type TechnologyCardProps = {
   name: string;

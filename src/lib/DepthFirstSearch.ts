@@ -1,4 +1,4 @@
-import { SolutionCell, Coordinate } from "./types";
+import { SolutionCell, Coordinate } from "../lib/types";
 
 export type DepthFirstSearchProps = {
   maze: SolutionCell[][];
