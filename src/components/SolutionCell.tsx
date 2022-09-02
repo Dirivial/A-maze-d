@@ -32,10 +32,10 @@ export const SolutionCell = ({
   useMemo(() => {
     setColor((prev) => {
       if (isEntrance) {
-        return " bg-red-700";
+        return " bg-green-600";
       }
       if (isExit) {
-        return " bg-red-700";
+        return " bg-green-600";
       }
       if (path) {
         return marks === 0

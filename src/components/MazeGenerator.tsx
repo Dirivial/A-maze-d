@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import useInterval from "../hooks/useInterval";
-import { Cell } from "./cell";
+import { Cell } from "./Cell";
 import { GeneratedCell } from "../lib/types";
 
 export type MazeGeneratorProps = {
