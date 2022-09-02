@@ -4,7 +4,7 @@ export type CellProps = {
   path: boolean;
 };
 
-export default function Cell({ path }: CellProps) {
+export default function GeneratedCell({ path }: CellProps) {
   const [color, setColor] = useState(path ? " bg-purple-400" : " bg-gray-600");
 
   useMemo(() => {
