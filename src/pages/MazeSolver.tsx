@@ -95,7 +95,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
     if (paused) {
       if (!entrance || !exit) {
         setErrorMsg(
-          "You need to set start and goal.\n(Click square for start, Shift+Click for goal)"
+          "You need to set start and goal.\n(Click square for start, Alt/Option+Click for goal)"
         );
         return;
       }

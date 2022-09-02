@@ -52,7 +52,7 @@ export const SolutionCell = ({
     event.preventDefault();
     if (isExit || isEntrance) return;
 
-    if (event.shiftKey) {
+    if (event.altKey) {
       updateExit();
     } else {
       updateEntrance();
