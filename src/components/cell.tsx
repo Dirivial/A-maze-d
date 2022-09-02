@@ -4,7 +4,7 @@ export type CellProps = {
   path: boolean;
 };
 
-export const Cell = ({ path }: CellProps) => {
+export default function Cell({ path }: CellProps) {
   const [color, setColor] = useState(path ? " bg-purple-400" : " bg-gray-600");
 
   useMemo(() => {
@@ -22,4 +22,4 @@ export const Cell = ({ path }: CellProps) => {
       {"‎"}
     </button>
   );
-};
+}
