@@ -168,7 +168,7 @@ export const MazeGenerator = ({
   }
 
   function calcSurroundingCells(x: number, y: number, maze: GeneratedCell[][]) {
-    let sumOfSurrounding: number = 0;
+    let sumOfSurrounding = 0;
 
     for (let i = -1; i < 2; i += 2) {
       if (maze.at(y + i)?.at(x)?.visited) {
