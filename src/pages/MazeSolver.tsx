@@ -19,6 +19,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
   const [exit, setExit] = useState<SpecialCell>();
   const [paused, setPaused] = useState(true);
   const [done, setDone] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const [searchHead, setSearchHead] = useState({
     current: { x: -1, y: -1 },
@@ -59,19 +60,52 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
   // Wait until algorithm is implemented
   useInterval(
     () => {
-      findPossibleMoves();
+      solveNextStep();
     },
     done || paused ? null : 50
   );
 
-  function findPossibleMoves() {
+  // Calculate and show the next move made by the algorithm the user chose
+  function solveNextStep() {
     if (searchHead.current.x === -1 || searchHead.current.y === -1) return;
     const result = DepthFirstSearch({ maze, searchHead });
     setMaze(result.maze);
     setSearchHead(result.searchHead);
   }
 
-  function resetMaze() {}
+  function resetMaze() {
+    setPaused(true);
+    setDone(false);
+    setMaze((prev) => {
+      const newMaze = [...prev];
+      newMaze.flat().forEach((cell) => (cell.marks = 0));
+      return newMaze;
+    });
+    setSearchHead({ current: { x: -1, y: -1 }, last: { x: 0, y: 0 } });
+    setEntrance(undefined);
+    setExit(undefined);
+    setErrorMsg("");
+  }
+
+  function pauseOrStart() {
+    if (done) {
+      setErrorMsg("Reset before starting again.");
+      return;
+    }
+    if (paused) {
+      if (!entrance || !exit) {
+        setErrorMsg(
+          "You need to set start and goal.\n(Click square for start, Shift+Click for goal)"
+        );
+        return;
+      }
+      setPaused(false);
+      setErrorMsg("");
+      return;
+    }
+    setPaused(true);
+    setErrorMsg("");
+  }
 
   function updateEntrance(x: number, y: number, index: number) {
     if (maze === undefined) return;
@@ -95,7 +129,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
     <div>
       <div className="flex justify-center align-middle">
         <button
-          onClick={() => setPaused((prev) => !prev)}
+          onClick={() => pauseOrStart()}
           className="p-2 rounded bg-transparent transition-colors hover:bg-slate-600 text-gray-100"
         >
           {paused ? "Start" : "Pause"}
@@ -108,7 +142,7 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
         </button>
       </div>
       <div className="p-3" />
-      <div className="">
+      <div className="flex justify-center">
         <div
           style={{
             maxWidth: width * 1.75 + "rem",
@@ -134,6 +168,11 @@ export const MazeSolver = ({ width, generatedMaze }: MazeSolverProps) => {
           })}
         </div>
       </div>
+      {errorMsg.length > 0 ? (
+        <div id="errorText" className="p-3 text-orange-300 flex justify-center">
+          {errorMsg}
+        </div>
+      ) : null}
     </div>
   );
 };
